@@ -207,7 +207,6 @@ def main():
                 cv2.putText(frame, 'Face not detected', (10, 10), font, 1, (255, 255, 255), 1)
 
             cv2.imshow(window_name, cv2.resize(frame, (int(frame.shape[1]/3), int(frame.shape[0]/3))))
-            
 
 
         counter += 1
