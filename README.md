@@ -13,6 +13,8 @@ Used 4 OpenVino models
  - Gaze Estimation Model
      Gaze estimate from head pose and eye images
 
+![Pipeline](img/pipeline.png "Pipeline")
+
 ## Project Set Up and Installation
 
 ### Download models
@@ -31,6 +33,57 @@ Used 4 OpenVino models
 
      sudo apt-get install python3-dev
 
+### Directory structure
+    
+    .
+    ├── bin
+    │   └── demo.mp4
+    ├── models
+    │   └── intel
+    │       ├── face-detection-adas-0001
+    │       │   ├── FP16
+    │       │   │   ├── face-detection-adas-0001.bin
+    │       │   │   └── face-detection-adas-0001.xml
+    │       │   ├── FP16-INT8
+    │       │   │   ├── face-detection-adas-0001.bin
+    │       │   │   └── face-detection-adas-0001.xml
+    │       │   └── FP32
+    │       │       ├── face-detection-adas-0001.bin
+    │       │       └── face-detection-adas-0001.xml
+    │       ├── gaze-estimation-adas-0002
+    │       │   ├── FP16
+    │       │   │   ├── gaze-estimation-adas-0002.bin
+    │       │   │   └── gaze-estimation-adas-0002.xml
+    │       │   ├── FP16-INT8
+    │       │   │   ├── gaze-estimation-adas-0002.bin
+    │       │   │   └── gaze-estimation-adas-0002.xml
+    │       │   └── FP32
+    │       │       ├── gaze-estimation-adas-0002.bin
+    │       │       └── gaze-estimation-adas-0002.xml
+    │       ├── head-pose-estimation-adas-0001
+    │       │   ├── FP16
+    │       │   │   ├── head-pose-estimation-adas-0001.bin
+    │       │   │   └── head-pose-estimation-adas-0001.xml
+    │       │   ├── FP16-INT8
+    │       │   │   ├── head-pose-estimation-adas-0001.bin
+    │       │   │   └── head-pose-estimation-adas-0001.xml
+    │       │   └── FP32
+    │       │       ├── head-pose-estimation-adas-0001.bin
+    │       │       └── head-pose-estimation-adas-0001.xml
+    │       └── landmarks-regression-retail-0009
+    │           ├── FP16
+    │           │   ├── landmarks-regression-retail-0009.bin
+    │           │   └── landmarks-regression-retail-0009.xml
+    │           ├── FP16-INT8
+    │           │   ├── landmarks-regression-retail-0009.bin
+    │           │   └── landmarks-regression-retail-0009.xml
+    │           └── FP32
+    │               ├── landmarks-regression-retail-0009.bin
+    │               └── landmarks-regression-retail-0009.xml
+    ├── README.md
+    ├── requirements.txt
+
+
 
 ## Demo
     #with video file 
@@ -39,26 +92,40 @@ Used 4 OpenVino models
     #with camera
     python3 main.py -i cam -s True 
 
+    ![Frame](img/screen.png "Demo")
+
 ## Documentation
     
         usage: main.py [-h] -i INPUT [-l CPU_EXTENSION] [-d DEVICE]
                [-pt PROB_THRESHOLD] [-s SHOW]
+               [--facedetectionmodel FACEDETECTIONMODEL]
+               [--headposeestimationmodel HEADPOSEESTIMATIONMODEL]
+               [--landmarksregressionmodel LANDMARKSREGRESSIONMODEL]
+               [--gazeestimationmodel GAZEESTIMATIONMODEL]
 
-          optional arguments:
-          -h, --help            show this help message and exit
-          -i INPUT, --input INPUT
-                              path to video file or 'cam' for live feed
-          -l CPU_EXTENSION, --cpu_extension CPU_EXTENSION
-                              MKLDNN (CPU)-targeted custom layers.Absolute path to a
-                              shared library with thekernels impl.
-          -d DEVICE, --device DEVICE
-                              Specify the target device to infer on: CPU, GPU, FPGA
-                              or MYRIAD is acceptable. Sample will look for a
-                              suitable plugin for device specified (CPU by default)
-          -pt PROB_THRESHOLD, --prob_threshold PROB_THRESHOLD
-                              Probability threshold for detections filtering(0.5 by
-                              default)
-          -s SHOW, --show True/Fase  Display video image
+        optional arguments:
+        -h, --help            show this help message and exit
+        -i INPUT, --input INPUT
+                                path to video file or 'cam' for live feed
+        -l CPU_EXTENSION, --cpu_extension CPU_EXTENSION
+                                MKLDNN (CPU)-targeted custom layers.Absolute path to a
+                                shared library with thekernels impl.
+        -d DEVICE, --device DEVICE
+                                Specify the target device to infer on: CPU, GPU, FPGA
+                                or MYRIAD is acceptable. Sample will look for a
+                                suitable plugin for device specified (CPU by default)
+        -pt PROB_THRESHOLD, --prob_threshold PROB_THRESHOLD
+                                Probability threshold for detections filtering(0.5 by
+                                default)
+        -s SHOW, --show SHOW  Display video image
+        --facedetectionmodel FACEDETECTIONMODEL
+                                path to Face detection model file
+        --headposeestimationmodel HEADPOSEESTIMATIONMODEL
+                                path to head pose estimation model file
+        --landmarksregressionmodel LANDMARKSREGRESSIONMODEL
+                                path to landmarks regression model file
+        --gazeestimationmodel GAZEESTIMATIONMODEL
+                                path to gaze estimation model file
 
 ## Benchmarks
 
@@ -90,4 +157,3 @@ Async and sync inference time are almost same. but displaying frame is faster.
 
 ### Edge Cases
 if --show switch is set to True displays square around found face and both eyes. also displays head angle and estimated gaze direction in line. so use can check, lighting is good to detect face or if multiple people in the frame which people is using for gaze estimation. 
-.

@@ -51,10 +51,20 @@ def build_argparser():
     parser.add_argument("-pt", "--prob_threshold", type=float, default=0.5,
                         help="Probability threshold for detections filtering"
                         "(0.5 by default)")
-
     parser.add_argument("-s", "--show", type=bool, default=False,
                         help='Display video image')
-
+    parser.add_argument("--facedetectionmodel", required=False, type=str,
+                        default=FACE_DETECTION_MODEL_FILE,
+                        help="path to Face detection model file")
+    parser.add_argument("--headposeestimationmodel", required=False, type=str,
+                        default=HEAD_POSE_ESTIMATION_MODEL_FILE,
+                        help="path to head pose estimation model file")
+    parser.add_argument("--landmarksregressionmodel", required=False, type=str,
+                        default=LANDMARKS_REGRESSION_MODEL_FILE,
+                        help="path to landmarks regression model file")
+    parser.add_argument("--gazeestimationmodel", required=False, type=str,
+                        default=GAZE_ESTIMATION_MODEL_FILE,
+                        help="path to gaze estimation model file")
     return parser
 
 def main():
@@ -63,7 +73,7 @@ def main():
     log.debug(args)
 
     # Load face detection model
-    faceDetection = ModelFaceDetection(FACE_DETECTION_MODEL_FILE, args.prob_threshold, args.device, args.cpu_extension)
+    faceDetection = ModelFaceDetection(args.facedetectionmodel, args.prob_threshold, args.device, args.cpu_extension)
     start_model_load_time = time.time()
     faceDetection.load_model()
     facedetection_model_load_time = time.time() - start_model_load_time
@@ -71,7 +81,7 @@ def main():
     log.debug('Facedetection model load time. {}'.format(facedetection_model_load_time))
 
     #Load Head pose estimation model
-    headPoseEstimation = ModelHeadPoseEstimation(HEAD_POSE_ESTIMATION_MODEL_FILE, args.prob_threshold, args.device, args.cpu_extension)
+    headPoseEstimation = ModelHeadPoseEstimation(args.headposeestimationmodel, args.prob_threshold, args.device, args.cpu_extension)
     start_model_load_time = time.time()
     headPoseEstimation.load_model()
     headposeestimation_model_load_time = time.time() - start_model_load_time
@@ -79,7 +89,7 @@ def main():
     log.debug('Head pose estimation model load time. {}'.format(headposeestimation_model_load_time))
 
     #Facial landmark model
-    facialLandmarkDetection = ModelFacialLandmarkDetection(FACIAL_LANDMARKS_DETECTION_MODEL_FILE, args.prob_threshold, args.device, args.cpu_extension)
+    facialLandmarkDetection = ModelFacialLandmarkDetection(args.landmarksregressionmodel, args.prob_threshold, args.device, args.cpu_extension)
     start_model_load_time = time.time()
     facialLandmarkDetection.load_model()
     facialLandmarkDetection_model_load_time = time.time() - start_model_load_time
@@ -87,7 +97,7 @@ def main():
     log.debug('Facial landmarks detection model load time. {}'.format(facialLandmarkDetection_model_load_time))
 
     #Gaze estimation model
-    gazeEstimation = ModelGazeEstimation(GAZE_ESTIMATION_MODEL_FILE, args.prob_threshold, args.device, args.cpu_extension)
+    gazeEstimation = ModelGazeEstimation(args.gazeestimationmodel, args.prob_threshold, args.device, args.cpu_extension)
     start_model_load_time = time.time()
     gazeEstimation.load_model()
     gazeEstimation_model_load_time = time.time() - start_model_load_time
