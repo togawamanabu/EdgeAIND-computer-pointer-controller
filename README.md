@@ -98,10 +98,10 @@ Used 4 OpenVino models
     
         usage: main.py [-h] -i INPUT [-l CPU_EXTENSION] [-d DEVICE]
                [-pt PROB_THRESHOLD] [-s SHOW]
-               [--facedetectionmodel FACEDETECTIONMODEL]
-               [--headposeestimationmodel HEADPOSEESTIMATIONMODEL]
-               [--landmarksregressionmodel LANDMARKSREGRESSIONMODEL]
-               [--gazeestimationmodel GAZEESTIMATIONMODEL]
+               [--face_detection_model FACE_DETECTION_MODEL]
+               [--headpose_estimation_model HEADPOSE_ESTIMATION_MODEL]
+               [--landmarks_regression_model LANDMARKS_REGRESSION_MODEL]
+               [--gaze_estimation_model GAZE_ESTIMATION_MODEL]
 
         optional arguments:
         -h, --help            show this help message and exit
@@ -118,13 +118,13 @@ Used 4 OpenVino models
                                 Probability threshold for detections filtering(0.5 by
                                 default)
         -s SHOW, --show SHOW  Display video image
-        --facedetectionmodel FACEDETECTIONMODEL
+        --face_detection_model FACE_DETECTION_MODEL
                                 path to Face detection model file
-        --headposeestimationmodel HEADPOSEESTIMATIONMODEL
+        --headpose_estimation_model HEADPOSE_ESTIMATION_MODEL
                                 path to head pose estimation model file
-        --landmarksregressionmodel LANDMARKSREGRESSIONMODEL
+        --landmarks_regression_model LANDMARKS_REGRESSION_MODEL
                                 path to landmarks regression model file
-        --gazeestimationmodel GAZEESTIMATIONMODEL
+        --gaze_estimation_model GAZE_ESTIMATION_MODEL
                                 path to gaze estimation model file
 
 ## Benchmarks
