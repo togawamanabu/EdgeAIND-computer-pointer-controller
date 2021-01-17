@@ -19,7 +19,13 @@ class ModelHeadPoseEstimation(ModelInferenceBase):
         processed_image = self.preprocess_input(image)
         input_dict={self.input_name:processed_image}
 
-        result = self.exec_net.infer(input_dict)
+        # result = self.exec_net.infer(input_dict)
+
+        self.exec_net.start_async(0, input_dict)
+
+        if self.exec_net.requests[0].wait(-1) == 0:
+            result = self.exec_net.requests[0].outputs
+
 
         yaw, pitch, roll = self.preprocess_output(result, image)
 

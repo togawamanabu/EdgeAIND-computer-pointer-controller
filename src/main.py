@@ -16,7 +16,7 @@ import logging as log
 
 log.basicConfig(level=log.DEBUG)
 
-MODEL_PRECISION = 'FP16'
+MODEL_PRECISION = 'FP16' #FP16-INT8 / FP16 / FP32
 
 FACE_DETECTION_MODEL_FILE = "../models/intel/face-detection-adas-0001/{}/face-detection-adas-0001.xml".format(MODEL_PRECISION)
 
@@ -101,6 +101,11 @@ def main():
     counter = 0
     window_name = 'frame'
 
+    facedetection_inference_time_sum = 0
+    headpose_inference_time_sum = 0 
+    faciallandmark_inference_time_sum = 0
+    gazeestimation_inference_time_sum = 0
+
     #Process Framea
     for frame in feeder.next_batch():
         if frame is None:
@@ -114,11 +119,13 @@ def main():
         start_inference_time=time.time()
         face_image, face_coords = faceDetection.predict(frame)
         facedetection_inference_time = time.time() - start_inference_time
+        facedetection_inference_time_sum += facedetection_inference_time
 
         #Head pose estimation
         start_inference_time=time.time()
         yaw, pitch, roll = headPoseEstimation.predict(face_image)
         headpose_inference_time = time.time() - start_inference_time
+        headpose_inference_time_sum += headpose_inference_time
 
         # log.debug('Head pose yaw, pirch ,roll {}, {}, {}'.format(yaw, pitch, roll))
 
@@ -126,6 +133,7 @@ def main():
         start_inference_time=time.time()
         left_eye_image, right_eye_image, eye_coords = facialLandmarkDetection.predict(face_image)
         faciallandmark_inference_time = time.time() - start_inference_time
+        faciallandmark_inference_time_sum += faciallandmark_inference_time
 
         # cv2.imwrite('left_eye.png', left_eye_image)
         # cv2.imwrite('right_eye.png', right_eye_image)
@@ -135,12 +143,13 @@ def main():
         start_inference_time=time.time()
         gaze_vector = gazeEstimation.predict(left_eye_image, right_eye_image, [yaw, pitch, roll])
         gazeestimation_inference_time = time.time() - start_inference_time
+        gazeestimation_inference_time_sum += gazeestimation_inference_time
 
         #log.debug('Gaze Vector {}, {}'.format(gaze_vector[0], gaze_vector[1]))
 
         #Mouse
         if(counter%2 ==0):
-            mouse = MouseController('medium', 'fast')
+            mouse = MouseController('high', 'fast')
             mouse.move(gaze_vector[0], gaze_vector[1])
 
         #Display frame
@@ -180,7 +189,7 @@ def main():
 
                 #gaze 
                 x = int(length * gaze_vector[0])
-                y = int(length * gaze_vector[1])
+                y = -int(length * gaze_vector[1])
 
                 cv2.line(frame, (fxmax, fymax), (fxmax+x, fymax+y), (0,255,255), 5 )
 
@@ -192,6 +201,11 @@ def main():
 
 
         counter += 1
+
+    log.debug("Face detection inference time average {}".format(facedetection_inference_time_sum/counter))
+    log.debug("Headpose inference time average  {}".format(headpose_inference_time_sum/counter))
+    log.debug("Faciallandmark inference time average {}".format(faciallandmark_inference_time_sum/counter))
+    log.debug("Gazeestimation inference time average {}".format(gazeestimation_inference_time_sum/counter))
 
     if(args.show):   
         cv2.destroyWindow(window_name)

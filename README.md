@@ -40,19 +40,54 @@ Used 4 OpenVino models
     python3 main.py -i cam -s True 
 
 ## Documentation
-*TODO:* Include any documentation that users might need to better understand your project code. For instance, this is a good place to explain the command line arguments that your project supports.
+    
+        usage: main.py [-h] -i INPUT [-l CPU_EXTENSION] [-d DEVICE]
+               [-pt PROB_THRESHOLD] [-s SHOW]
+
+          optional arguments:
+          -h, --help            show this help message and exit
+          -i INPUT, --input INPUT
+                              path to video file or 'cam' for live feed
+          -l CPU_EXTENSION, --cpu_extension CPU_EXTENSION
+                              MKLDNN (CPU)-targeted custom layers.Absolute path to a
+                              shared library with thekernels impl.
+          -d DEVICE, --device DEVICE
+                              Specify the target device to infer on: CPU, GPU, FPGA
+                              or MYRIAD is acceptable. Sample will look for a
+                              suitable plugin for device specified (CPU by default)
+          -pt PROB_THRESHOLD, --prob_threshold PROB_THRESHOLD
+                              Probability threshold for detections filtering(0.5 by
+                              default)
+          -s SHOW, --show True/Fase  Display video image
 
 ## Benchmarks
-*TODO:* Include the benchmark results of running your model on multiple hardwares and multiple model precisions. Your benchmarks can include: model loading time, input/output processing time, model inference time etc.
+
+### Model loading time 
+
+| Model precision | Facedetection       | Head pose estimation | Facial landmarks detection | Gaze estimation model load tim | SUM                 |
+|-----------------|---------------------|----------------------|----------------------------|--------------------------------|---------------------|
+| FP16            | 0.23139667510986328 | 0.10564780235290527  | 0.06157493591308594        | 0.10630202293395996            | 0.50492143630981400 |
+| FP16-INT8       | 0.3191680908203125  | 0.16000127792358398  | 0.08503890037536621        | 0.16727805137634277            | 0.731486320495606   |
+| FP32            | 0.1714613437652588  | 0.07145953178405762  | 0.06021475791931152        | 0.08439970016479492            | 0.387535333633423   |
+
+
+### Inference time average
+
+|   Model precision  |   Facedetection      |   Head pose estimation  |   Facial landmarks detection  |   Gaze estimation model load tim  |   SUM                      |
+|--------------------|----------------------|-------------------------|-------------------------------|-----------------------------------|----------------------------|
+|   FP16             | 0.03893536632343874  | 0.0021520671197923563   | 0.0005554667973922471         | 0.0022391060651358913             | 0.0438820063057592         |
+|   FP16-INT8        | 0.036515842049808823 | 0.0018429352065264168   | 0.0004868184105824616         | 0.0018327478635109078             | 0.0406783435304286         |
+|   FP32             | 0.04225951938305871  | 0.0035317307811672406   | 0.0004957570868023371         | 0.0024501630815409                | 0.0487371703325692         |
+
 
 ## Results
-*TODO:* Discuss the benchmark results and explain why you are getting the results you are getting. For instance, explain why there is difference in inference time for FP32, FP16 and INT8 models.
 
-## Stand Out Suggestions
-This is where you can provide information about the stand out suggestions that you have attempted.
+FP32's Model Loading time is fastest and INT8 slowest. Int8's  Inference time is fastest (41ms - 24FPS) and FP32 is slowest (49ms - 20FPS)  per frame. 
+Both of precision models works well with video inputs.
 
 ### Async Inference
-If you have used Async Inference in your code, benchmark the results and explain its effects on power and performance of your project.
+Async and sync inference time are almost same. but displaying frame is faster. 
 
 ### Edge Cases
-There will be certain situations that will break your inference flow. For instance, lighting changes or multiple people in the frame. Explain some of the edge cases you encountered in your project and how you solved them to make your project more robust.
+if --show switch is set to True displays square around found face and both eyes. also displays head angle and estimated gaze direction in line. so use can check, lighting is good to detect face or if multiple people in the frame which people is using for gaze estimation. 
+.

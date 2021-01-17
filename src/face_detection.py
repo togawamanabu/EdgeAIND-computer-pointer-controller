@@ -17,7 +17,12 @@ class ModelFaceDetection(ModelInferenceBase):
         processed_image = self.preprocess_input(image)
         input_dict={self.input_name:processed_image}
 
-        result = self.exec_net.infer(input_dict)[self.output_name]
+        # result = self.exec_net.infer(input_dict)[self.output_name]
+
+        self.exec_net.start_async(0, input_dict)
+
+        if self.exec_net.requests[0].wait(-1) == 0:
+            result = self.exec_net.requests[0].outputs[self.output_name]
 
         image, coords = self.preprocess_output(result, image)
 

@@ -6,6 +6,7 @@ This has been provided just to give you an idea of how to structure your model c
 import os
 import cv2
 from openvino.inference_engine import IECore
+import threading
 
 import logging as log
 

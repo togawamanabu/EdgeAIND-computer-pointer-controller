@@ -19,8 +19,6 @@ class ModelGazeEstimation(ModelInferenceBase):
         processed_lefteye_image = self.preprocess_input(left_eye_image)
         processed_righteye_image = self.preprocess_input(right_eye_image)
 
-        log.debug(head_pose_angle)
-
         input_dict={
                     'left_eye_image': processed_lefteye_image,
                     'right_eye_image': processed_righteye_image,
