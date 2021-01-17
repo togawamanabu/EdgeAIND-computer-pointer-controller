@@ -92,7 +92,7 @@ Used 4 OpenVino models
     #with camera
     python3 main.py -i cam -s True 
 
-    ![Frame](img/screen.png "Demo")
+![Frame](img/screen.png "Demo")
 
 ## Documentation
     
